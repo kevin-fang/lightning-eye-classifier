@@ -26,4 +26,4 @@ print "tile step: " + str(vectorizedStep[int(sys.argv[1])])
 # search for the vector path in the tile assembly file
 vecpath = vecpath[2:]
 vecpath = vecpath.zfill(4)
-os.system("cat assembly.00.hg19.fw.fwi | grep " + vecpath) 
+os.system("cat assembly.00.hg19.fw.fwi | grep \"" + vecpath + "\s\"") 
