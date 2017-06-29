@@ -61,11 +61,11 @@ for nameTuple in namePairIndices:
     rightEyeNameList.append(nameRightEyeMap[nameTuple[1]])
 
 # changes values to only blue/not blue for binary classification
-for i in range(len(leftEyeNameList)): 
-    if leftEyeNameList[i] > 12:
-        leftEyeNameList[i] = 0 # not blue
+for i in range(len(rightEyeNameList)): 
+    if rightEyeNameList[i] > 12:
+        rightEyeNameList[i] = 0 # not blue
     else:
-        leftEyeNameList[i] = 1 # blue
+        rightEyeNameList[i] = 1 # blue
 
 # scale the data
 knownData = preprocessing.scale(knownData.astype('double'))
@@ -74,7 +74,7 @@ print "Finished processing data.",
 print "Running support vector classifier..."
 svc_test = LinearSVC(penalty='l1', class_weight='balanced', 
                      C=.06, dual=False, max_iter=2500)
-svc_test.fit(knownData, leftEyeNameList)
+svc_test.fit(knownData, rightEyeNameList)
 
 print "Classifier done. Retrieving coefficients..."
 # retrieve all the nonzero coefficients and zip them with their respective indices
@@ -87,7 +87,7 @@ coefs.sort(key = lambda x: x[1], reverse=True)
 # save just the coefficient values
 firstCoefs = [coef[0] for coef in coefs]
 indices = np.asarray(firstCoefs)
-print "Highest coefficient:", str(coefs[0][1]), "Index:", coefs[0][0]
+print "Highest coefficient:", str(coefs[0][1]), "Index:",  coefs[0][0]
 
 # searches for a tile path given its location
 # note: requires unix for system 'cat' command.
