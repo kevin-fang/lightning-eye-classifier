@@ -6,7 +6,7 @@ This project is reliant on the following Python libraries: scikit-learn, pandas,
 
 To download hiq-pgp.npy, stay in this folder and run `arv-get bfba01c5b9b4053f596a2dc36d072cd6+46480/hiq-pgp .` after setting your Arvados API key.
 
-To setup in this entire project in one command, run `arv-get bfba01c5b9b4053f596a2dc36d072cd6+46480/hiq-pgp . && mv hiq-pgp hiq-pgp.npy && cd tiling && arv-get b8835cbca4f8dfd3396f39f5ca10bb84+780/assembly.00.hg19.fw.fwi . && arv-get b8835cbca4f8dfd3396f39f5ca10bb84+780/assembly.00.hg19.fw.gz .`
+To setup the entire repository, setup your Arvados API tokens and run `./download_dependencies.sh`
 
 To run the classifier and get the base pairs responsible for left eye color, run the following command:
 `python run_left_classifier_and_get_tiles.py`
