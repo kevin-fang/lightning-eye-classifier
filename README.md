@@ -1,6 +1,8 @@
 # Eye Color Classification using Support Vector Machines
 ### Kevin Fang, Curoverse, 2017
-Note: before running, the tiled PGP data must be downloaded and named `hiq-pgp.npy`. In addition, the tiled datasets must be downloaded - this includes `assembly.00.hg19.fw.fwi` and `assembly.00.hg10.fw.gz`.
+Note: before running, the tiled PGP data must be downloaded and named `hiq-pgp.npy`. In addition, the tiled datasets must be downloaded - this includes `assembly.00.hg19.fw.fwi` and `assembly.00.hg10.fw.gz`. There are instructions for downloading the assembly files in `/tiling/`
+
+To download hiq-pgp.npy, stay in this folder and run `arv-get bfba01c5b9b4053f596a2dc36d072cd6+46480/hiq-pgp` after setting your API key.
 
 To run the classifier and get the base pairs responsible for left eye color, run the following command:
 `python run_left_classifier_and_get_tiles.py`
