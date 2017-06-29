@@ -3,4 +3,4 @@ hiq-pgp.npy
 *.fwi
 *.gz
 *.fw
-eye_classifier_mlp.pkl
+*.pkl
