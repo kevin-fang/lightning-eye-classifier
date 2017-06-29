@@ -54,15 +54,15 @@ unknownData = np.delete(pgp, nameIndices, axis=0)
 
 # convert dictionaries to lists 
 leftEyeNameList = []
-rightEyeNameList = []
+    rightEyeNameList = []
 
-for nameTuple in namePairIndices:
-    leftEyeNameList.append(nameLeftEyeMap[nameTuple[1]])
-    rightEyeNameList.append(nameRightEyeMap[nameTuple[1]])
+    for nameTuple in namePairIndices:
+        leftEyeNameList.append(nameLeftEyeMap[nameTuple[1]])
+        rightEyeNameList.append(nameRightEyeMap[nameTuple[1]])
 
-# changes values to only blue/not blue for binary classification
-for i in range(len(rightEyeNameList)): 
-    if rightEyeNameList[i] > 12:
+    # changes values to only blue/not blue for binary classification
+    for i in range(len(rightEyeNameList)): 
+        if rightEyeNameList[i] > 13:
         rightEyeNameList[i] = 0 # not blue
     else:
         rightEyeNameList[i] = 1 # blue

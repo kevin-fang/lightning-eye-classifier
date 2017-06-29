@@ -62,7 +62,7 @@ for nameTuple in namePairIndices:
 
 # changes values to only blue/not blue for binary classification
 for i in range(len(leftEyeNameList)): 
-    if leftEyeNameList[i] > 12:
+    if leftEyeNameList[i] > 13:
         leftEyeNameList[i] = 0 # not blue
     else:
         leftEyeNameList[i] = 1 # blue
