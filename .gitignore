@@ -1,6 +1,8 @@
 hiq-pgp.npy
 *.gz
 *.fwi
-*.gz
+*.gzi
 *.fw
 *.pkl
+*.npy
+
