@@ -21,4 +21,4 @@ The classifier is able to predict the blue eye color to approximately 85% accura
 
 ![confusion-matrix](https://github.com/kevin-fang/svc-eye-classifier/raw/master/Blue_Confusion.png)
 
-The classifier is able to find that eye color is reliant on base pairs 28,264,893 to 28,265,118, which is consistent with the HERC2 gene, responsible for eye color (https://ghr.nlm.nih.gov/gene/HERC2#location).
+The classifier is able to find that eye color is reliant on base pairs 28,264,893 to 28,265,118, which is consistent with the HERC2 gene, responsible for eye color (https://ghr.nlm.nih.gov/gene/HERC2#location, https://link.springer.com/article/10.1007%2Fs00439-007-0460-x)
