@@ -4,9 +4,7 @@ Note: before running, the tiled PGP data must be downloaded and named `hiq-pgp.n
 
 This project is reliant on the following Python libraries: scikit-learn, pandas, matplotlib, numpy, scipy. In addition, the tile searches cannot be run on non-UNIX machines as it requires the system `grep` and `cat` commands.
 
-To download hiq-pgp.npy, stay in this folder and run `arv-get bfba01c5b9b4053f596a2dc36d072cd6+46480/hiq-pgp .` after setting your Arvados API key.
-
-To setup the entire repository, setup your Arvados API tokens and run `./download_dependencies.sh`
+To setup the entire repository, setup your Arvados API tokens and run `./download_dependencies.sh` - this downloads the tiled data, names, information, and assembly files.
 
 To run the classifier and get the base pairs responsible for left eye color, run the following command:
 `python run_left_classifier_and_get_tiles.py`
