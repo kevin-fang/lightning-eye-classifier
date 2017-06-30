@@ -15,3 +15,8 @@ Otherwise, to run it through the interactive python session:
 3. Run `leftEyeClassifier.ipynb` first. This will generate the classifier and store it in a file called `svc.pkl`.  
 4. Then run `generateAndSaveCoefs.ipynb`. This will open the `svc.pkl` classifier and save the coefficients in a file called `coefs.pkl`.  
 5. Finally, run `TileSearch.ipynb`. This will open `coefs.pkl` and search for each tile.  
+
+## Details
+The classifier is able to predict the blue eye color to approximately 85% accuracy. Using 10-fold cross validation, an accuracy of 85.6% +/- 9.46% is achieved. With leave-one-out cross validation, an accuracy of 87.2% is achieved. Below is a confusion matrix for the leave-one-out cross validation:
+
+![confusion-matrix][Blue_Confusion.png]
