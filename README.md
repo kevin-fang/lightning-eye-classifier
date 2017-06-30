@@ -19,4 +19,4 @@ Otherwise, to run it through the interactive python session:
 ## Details
 The classifier is able to predict the blue eye color to approximately 85% accuracy. Using 10-fold cross validation, an accuracy of 85.6% +/- 9.46% is achieved. With leave-one-out cross validation, an accuracy of 87.2% is achieved. Below is a confusion matrix for the leave-one-out cross validation:
 
-![confusion-matrix][https://github.com/kevin-fang/svc-eye-classifier/raw/master/Blue_Confusion.png]
+![confusion-matrix](https://github.com/kevin-fang/svc-eye-classifier/raw/master/Blue_Confusion.png)
