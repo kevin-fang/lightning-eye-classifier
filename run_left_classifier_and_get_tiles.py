@@ -6,6 +6,21 @@ import numpy as np
 import pandas as pd
 import subprocess
 
+'''
+
+dependencies: hiq-pgp, names, hiq-pgp-info, assembly.00.hg19.fw.fwi, assembly.00.fg19.fw.gz, assembly.00.hg19.fw.gz.gzi
+descriptions:
+  hiq-pgp: numpy array of high quality tiles
+  names: numpy array of names corresponding to high quality tiles
+  hiq-pgp-info: coefficient paths for tiled data
+  assembly.00.hg19.fw.gz: gzipped fw assembly file
+  assembly.00.hg19.fw.fwi: indices for assembly fw file
+  assembly.00.hg19.gz.gzi: indices for gzipped fw assembly file
+usage: run_left_classifier_and_get_tiles.py 
+
+'''
+
+
 print "Loading names, survey, and tile data..."
 columns = ['name', 'left', 'right', 'left_desc', 'right_desc']
 # load survey data
@@ -13,12 +28,12 @@ surveyData = pd.read_csv("./eye_color_data/PGP-eyecolor.csv", names=columns, na_
 surveyNames = np.asarray(surveyData['name'].values.tolist())
 
 # load numpy array of names and keep only the huID
-pgpNames = np.load("names.npy")
+pgpNames = np.load("names")
 for i in range(len(pgpNames)):
     pgpNames[i] = pgpNames[i][:8]
 
 # load numpy array of tiled PGP data 
-pgp = np.load("hiq-pgp.npy")
+pgp = np.load("hiq-pgp")
 
 print "Finished loading data.",
 # lookup a name in the survey data and return a tuple of the eye colors

@@ -1,0 +1,15 @@
+hiq_tiles:
+        class: File
+        path: keep:bfba01c5b9b4053f596a2dc36d072cd6+46480/hiq-pgp 
+names:
+        class: File
+        path: keep:bfba01c5b9b4053f596a2dc36d072cd6+46480/names
+hiq_info:
+        class: File
+        path: keep:bfba01c5b9b4053f596a2dc36d072cd6+46480/hiq-pgp-info
+assemblyGz:
+        class: File
+        path: keep:b8835cbca4f8dfd3396f39f5ca10bb84+780/assembly.00.hg19.fw.gz
+assemblyFwi:
+        class: File
+        path: keep:b8835cbca4f8dfd3396f39f5ca10bb84+780/assembly.00.hg19.gz.gzi
