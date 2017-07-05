@@ -21,7 +21,7 @@ RUN apt-get install -y python \
 	liblapack-dev \
 	libatlas-base-dev \
 	gfortran \
-	g++ -y && \
+	g++ && \
     pip install --upgrade pip && \
     pip install numpy \
 	scipy \

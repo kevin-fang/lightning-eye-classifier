@@ -5,7 +5,7 @@ requirements:
 hints:
   DockerRequirement:
     dockerPull: kfang/svc_classify
-stdout: $("svc_classified")
+stdout: $("svc_classified.txt")
 baseCommand: ["./run_left_classify_arv.py"]
 inputs:
   hiq_tiles:
