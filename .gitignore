@@ -1,6 +1,10 @@
 hiq-pgp.npy
+hiq-pgp-info
+hiq-pgp
 *.gz
 *.fwi
-*.gz
+*.gzi
 *.fw
 *.pkl
+*.npy
+
