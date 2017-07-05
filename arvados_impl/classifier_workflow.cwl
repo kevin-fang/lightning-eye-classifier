@@ -6,6 +6,8 @@ requirements:
     dockerPull: kfang/svc_classify
 
 inputs:
+  script:
+    type: File
   hiq_tiles:
     type: File
   names:
@@ -26,6 +28,7 @@ steps:
   classify:
    run: classifier.cwl
    in:
+     script: script
      hiq_tiles: hiq_tiles
      names: names
      hiq_info: hiq_info
