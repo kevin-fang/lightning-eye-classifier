@@ -3,12 +3,12 @@ USER root
 
 RUN apt-get update -y && \
     apt-get upgrade -y && \
-    apt-get install wget -y && \
-    apt-get install dtrx -y && \
-    apt-get install gcc -y && \
-    apt-get install libbz2-dev -y && \
-    apt-get install liblzma-dev -y && \
-    apt-get install make -y && \
+    apt-get install -y wget \
+	dtrx \
+	gcc \
+	libbz2-dev \
+	liblzma-dev \
+	make && \
     wget --output-document=htslib-1.5.tar.bz2 https://github.com/samtools/htslib/releases/download/1.5/htslib-1.5.tar.bz2 && \
     dtrx htslib-1.5.tar.bz2 && \
     cd htslib-1.5 && \
@@ -16,12 +16,15 @@ RUN apt-get update -y && \
     make && \
     make install
 
-RUN apt-get install python -y && \
-    apt-get install libblas-dev liblapack-dev libatlas-base-dev gfortran -y && \
-    apt-get install g++ -y && \
+RUN apt-get install -y python \
+	libblas-dev \
+	liblapack-dev \
+	libatlas-base-dev \
+	gfortran \
+	g++ -y && \
     pip install --upgrade pip && \
-    pip install numpy && \
-    pip install scipy && \
-    pip install pandas && \
-    pip install sklearn && \
+    pip install numpy \
+	scipy \
+	pandas \
+	sklearn && \
     git clone https://github.com/kevin-fang/svc-eye-classifier.git
