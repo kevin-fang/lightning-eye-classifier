@@ -20,9 +20,15 @@ inputs:
 outputs:
   svc_output:
     type: File
-    outputSource: classify
+    outputSource: classify/svc_output
 
 steps:
   classify:
-    run: classifier.cwl
-    output: [svc_output]
+   run: classifier.cwl
+   in:
+     hiq_tiles: hiq_tiles
+     names: names
+     hiq_info: hiq_info
+     assemblyGz: assemblyGz
+     assemblyFwi: assemblyFwi
+   out: [svc_output]

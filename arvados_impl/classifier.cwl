@@ -29,3 +29,6 @@ inputs:
     inputBinding:
       position: 5
     
+outputs:
+  svc_output:
+    type: stdout
