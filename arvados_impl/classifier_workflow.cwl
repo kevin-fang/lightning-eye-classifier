@@ -4,6 +4,9 @@ requirements:
   InlineJavascriptRequirement: {}
   DockerRequirement:
     dockerPull: kfang/svc_classify
+  ResourceRequirement:
+    ramMin: 16384
+    ramMax: 32768
 
 inputs:
   script:
@@ -17,6 +20,8 @@ inputs:
   assemblyGz:
     type: File
   assemblyFwi:
+    type: File
+  pgp_survey:
     type: File
 
 outputs:
@@ -34,4 +39,5 @@ steps:
      hiq_info: hiq_info
      assemblyGz: assemblyGz
      assemblyFwi: assemblyFwi
+     pgp_survey: pgp_survey
    out: [svc_output]

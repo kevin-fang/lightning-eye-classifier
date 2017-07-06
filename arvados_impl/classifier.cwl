@@ -2,6 +2,9 @@ cwlVersion: v1.0
 class: CommandLineTool
 requirements:
   InlineJavascriptRequirement: {}
+  ResourceRequirement:
+    ramMin: 16384
+    ramMax: 32768
 hints:
   DockerRequirement:
     dockerPull: kfang/svc_classify
@@ -34,6 +37,10 @@ inputs:
     type: File
     inputBinding:
       position: 5
+  pgp_survey:
+    type: File
+    inputBinding:
+      position: 6
     
 outputs:
   svc_output:
