@@ -15,29 +15,37 @@ descriptions:
   hiq-pgp-info: coefficient paths for tiled data
   assembly.00.hg19.fw.gz: gzipped fw assembly file
   assembly.00.hg19.fw.fwi: indices for assembly fw file
-  assembly.00.hg19.gz.gzi: indices for gzipped fw assembly file
-usage: run_left_classifier_and_get_tiles.py 
+usage: run_left_classify_arv.py <hiq-pgp> <names> <hiq-pgp-info> <assembly..gz> <assembly...fwi> <assembly...gzi> 
 
 '''
+from sys import argv, exit
+if len(argv) != 7:
+    print "usage: run_left_classify_arv.py <hiq-pgp> <names> <hiq-pgp-info> <assembly..gz> <assembly...fwi> <pgp-survey>"
+    exit(1) 
 
+hiqPgp = argv[1]
+names = argv[2]
+hiqPgpInfo = argv[3]
+assemblyGz = argv[4]
+assemblyFwi = argv[5]
+pgpSurvey = argv[6]
 
 print "Loading names, survey, and tile data..."
-# read names that have provided survey eye color data
 columns = ['name', 'timestamp', 'id', 'blood_type', 'height', 'weight', 'hw_comments', 'left', 'right', 'left_desc', 'right_desc', 'eye_comments', 'hair', 'hair_desc', 'hair_comments', 'misc', 'handedness']
-
 # pgp eye color data from survey
-surveyData = pd.read_csv("./eye_color_data/PGP-Survey.csv", names=columns, na_values=['nan', '', 'NaN'])
+surveyData = pd.read_csv(pgpSurvey, names=columns, na_values=['nan', '', 'NaN'])
 
 # names of the pgp participants
 surveyNames = np.asarray(surveyData['name'].values.tolist())
 
 # load numpy array of names and keep only the huID
-pgpNames = np.load("names")
+pgpNames = np.load(names)
 for i in range(len(pgpNames)):
     pgpNames[i] = pgpNames[i][:8]
 
 # load numpy array of tiled PGP data 
 pgp = np.load("hiq-pgp")
+
 
 print "Finished loading data.",
 # lookup a name in the survey data and return a tuple of the eye colors
@@ -55,6 +63,7 @@ rightEyeMap = {}
 
 existingNames = []
 
+print "Processing..."
 # loop through pgpNames and add eye color to maps, making sure not to add the same name twice
 for i in range(len(pgpNames)):
     name = pgpNames[i]
@@ -75,6 +84,7 @@ unknownData = np.delete(pgp, nameIndices, axis=0)
 # convert dictionaries to lists 
 leftEyeNameList = []
 rightEyeNameList = []
+
 # nametuple looks like (index, name)
 for nameTuple in namePairIndices:
     name = nameTuple[1]
@@ -116,19 +126,20 @@ print "Highest coefficient:", str(coefs[0][1]), "Index:", coefs[0][0]
 # note: requires unix for system 'cat' command.
 print "Coefficients loaded. Searching tiles..."
 # load the coefficient paths from pgp data and generate tile path, step, and phase.
-coefPaths = np.load("./tiling/hiq-pgp-info")
+coefPaths = np.load(hiqPgpInfo)
 tile_path = np.trunc(coefPaths/(16**5))
 tile_step = np.trunc((coefPaths - tile_path * 16 ** 5) / 2)
 tile_phase = np.trunc((coefPaths - tile_path* 16 ** 5 - 2 * tile_step))
 vhex = np.vectorize(hex)
 vectorizedPath = vhex(tile_path.astype('int'))
 vectorizedStep = vhex(tile_step.astype('int'))
+subprocess.call("bgzip -r " + assemblyGz, shell=True)
 
 # search for a tile
 def tileSearch(arg):
     vecpath = str(vectorizedPath[int(arg)])
     vecpath = vecpath[2:].zfill(4)
-    proc = subprocess.check_output("cat ./tiling/assembly.00.hg19.fw.fwi | grep :" + vecpath, shell=True)
+    proc = subprocess.check_output("cat " + assemblyFwi + " | grep :" + vecpath, shell=True)
     return proc
 
 # get the location of a tile
@@ -137,7 +148,7 @@ def getTileLocation(raw_tile_data):
     begin = int(split_raw[2])
     sequence = int(split_raw[1])
     hexVal = split_raw[0].split(':')[2]
-    cmdToRun = "bgzip -c -b %d -s %d -d ./tiling/assembly.00.hg19.fw.gz | grep -B1 \"%s\s\"" % (begin, sequence, hexVal)
+    cmdToRun = "bgzip -c -b %d -s %d -d %s | grep -B1 \"%s\s\"" % (begin, sequence, assemblyGz, hexVal)
     proc = subprocess.check_output(cmdToRun, shell=True)
     return proc
 

@@ -19,8 +19,8 @@ usage: run_left_classify_arv.py <hiq-pgp> <names> <hiq-pgp-info> <assembly..gz> 
 
 '''
 from sys import argv, exit
-if len(argv) != 6:
-    print "usage: run_left_classify_arv.py <hiq-pgp> <names> <hiq-pgp-info> <assembly..gz> <assembly...fwi>"
+if len(argv) != 7:
+    print "usage: run_left_classify_arv.py <hiq-pgp> <names> <hiq-pgp-info> <assembly..gz> <assembly...fwi> <pgp-survey>"
     exit(1) 
 
 hiqPgp = argv[1]
@@ -28,11 +28,14 @@ names = argv[2]
 hiqPgpInfo = argv[3]
 assemblyGz = argv[4]
 assemblyFwi = argv[5]
+pgpSurvey = argv[6]
 
 print "Loading names, survey, and tile data..."
-columns = ['name', 'left', 'right', 'left_desc', 'right_desc']
-# load survey data
-surveyData = pd.read_csv("../eye_color_data/PGP-eyecolor.csv", names=columns, na_values=['nan', ''])
+# pgp eye color data from survey
+columns = ['name', 'timestamp', 'id', 'blood_type', 'height', 'weight', 'hw_comments', 'left', 'right', 'left_desc', 'right_desc', 'eye_comments', 'hair', 'hair_desc', 'hair_comments', 'misc', 'handedness']
+surveyData = pd.read_csv(pgpSurvey, names=columns, na_values=['nan', '', 'NaN'])
+
+# names of the pgp participants
 surveyNames = np.asarray(surveyData['name'].values.tolist())
 
 # load numpy array of names and keep only the huID
@@ -43,6 +46,7 @@ for i in range(len(pgpNames)):
 # load numpy array of tiled PGP data 
 pgp = np.load(hiqPgp)
 
+
 print "Finished loading data.",
 # lookup a name in the survey data and return a tuple of the eye colors
 def getData(name, surveyData):
@@ -50,12 +54,12 @@ def getData(name, surveyData):
         if row['name'] == name:
             return (row['left'], row['right'])
 
-# list of tuples for index and name with eye color data
+# list of tuples for index and name with eye color data (idx, name)
 namePairIndices = []
 
 # dictionary of left and right eye colors with respective name, i.e., {"huID": 12}
-nameLeftEyeMap = {}
-nameRightEyeMap = {}
+leftEyeMap = {}
+rightEyeMap = {}
 
 existingNames = []
 
@@ -66,12 +70,14 @@ for i in range(len(pgpNames)):
     if name in surveyNames and name not in existingNames:
         existingNames.append(name)
         eyeData = getData(name, surveyData)
-        namePairIndices.append((i, name))
-        nameLeftEyeMap[name] = eyeData[0]
-        nameRightEyeMap[name] = eyeData[1]
+        if isinstance(eyeData[0], str) and isinstance(eyeData[1], str):
+            namePairIndices.append((i, name))
+            leftEyeMap[name] = eyeData[0]
+            rightEyeMap[name] = eyeData[1]
 
 # create lists containing the known eye color names and the unknown eye colors.
 nameIndices = [nameIndex[0] for nameIndex in namePairIndices]
+correspondingNames = [nameIndex[1] for nameIndex in namePairIndices]
 knownData = pgp[nameIndices]
 unknownData = np.delete(pgp, nameIndices, axis=0)
 
@@ -79,17 +85,21 @@ unknownData = np.delete(pgp, nameIndices, axis=0)
 leftEyeNameList = []
 rightEyeNameList = []
 
+# nametuple looks like (index, name)
 for nameTuple in namePairIndices:
-    leftEyeNameList.append(nameLeftEyeMap[nameTuple[1]])
-    rightEyeNameList.append(nameRightEyeMap[nameTuple[1]])
-
-# changes values to only blue/not blue for binary classification
-for i in range(len(leftEyeNameList)): 
-    if leftEyeNameList[i] > 13:
+    name = nameTuple[1]
+    if isinstance(leftEyeMap[name], str):
+        leftEyeNameList.append(leftEyeMap[name])
+    
+    if isinstance(rightEyeMap[name], str):
+        rightEyeNameList.append(rightEyeMap[name])
+    
+for i in range(len(leftEyeNameList)): # changes values to only blue/not blue for binary classification
+    if isinstance(leftEyeNameList[i], str) and int(leftEyeNameList[i]) > 13:
         leftEyeNameList[i] = 0 # not blue
-    else:
+    elif isinstance(leftEyeNameList[i], str):
         leftEyeNameList[i] = 1 # blue
-
+        
 # scale the data
 knownData = preprocessing.scale(knownData.astype('double'))
 print "Finished processing data.",
