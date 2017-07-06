@@ -26,5 +26,4 @@ RUN apt-get install -y python \
     pip install numpy \
 	scipy \
 	pandas \
-	sklearn && \
-    git clone https://github.com/kevin-fang/svc-eye-classifier.git
+	sklearn 
