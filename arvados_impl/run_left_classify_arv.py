@@ -32,28 +32,43 @@ pgpSurvey = argv[6]
 
 print "Loading names, survey, and tile data..."
 # pgp eye color data from survey
+# read names that have provided survey eye color data
 columns = ['name', 'timestamp', 'id', 'blood_type', 'height', 'weight', 'hw_comments', 'left', 'right', 'left_desc', 'right_desc', 'eye_comments', 'hair', 'hair_desc', 'hair_comments', 'misc', 'handedness']
-surveyData = pd.read_csv(pgpSurvey, names=columns, na_values=['nan', '', 'NaN'])
+
+# pgp eye color data from survey
+surveyData = pd.read_csv("./eye_color_data/PGP-Survey.csv", names=columns, na_values=['nan', '', 'NaN'])
 
 # names of the pgp participants
 surveyNames = np.asarray(surveyData['name'].values.tolist())
 
 # load numpy array of names and keep only the huID
-pgpNames = np.load(names)
+pgpNames = np.load("names")
 for i in range(len(pgpNames)):
     pgpNames[i] = pgpNames[i][:8]
 
 # load numpy array of tiled PGP data 
-pgp = np.load(hiqPgp)
+pgp = preprocessing.scale(np.load("hiq-pgp").astype('double'))
 
+# simple lambda function to return if the input is a string
+isstr = lambda val: isinstance(val, str)
 
 print "Finished loading data.",
 # lookup a name in the survey data and return a tuple of the eye colors
-def getData(name, surveyData):
+def getAllData(name, surveyData):
     for index, row in surveyData.iterrows():
         if row['name'] == name:
             return (row['left'], row['right'])
-
+        
+        
+# lookup a name in the survey data and return a tuple of the eye colors, excluding hazel
+def getDataNoHazel(name, surveyData):
+    for index, row in surveyData.iterrows():
+        if row['name'] == name:
+            if isstr(row['left_desc']) and isstr(row['right_desc']):
+                if 'azel' in row['left_desc'] or 'azel' in row['right_desc']:
+                    return None
+            return (row['left'], row['right'])
+        
 # list of tuples for index and name with eye color data (idx, name)
 namePairIndices = []
 
@@ -63,17 +78,18 @@ rightEyeMap = {}
 
 existingNames = []
 
-print "Processing..."
 # loop through pgpNames and add eye color to maps, making sure not to add the same name twice
-for i in range(len(pgpNames)):
-    name = pgpNames[i]
+for i, name in enumerate(pgpNames):
     if name in surveyNames and name not in existingNames:
         existingNames.append(name)
-        eyeData = getData(name, surveyData)
-        if isinstance(eyeData[0], str) and isinstance(eyeData[1], str):
+        eyeData = getDataNoHazel(name, surveyData)
+        if eyeData == None:
+            continue
+        leftEye, rightEye = eyeData
+        if isstr(leftEye) and isstr(rightEye):
             namePairIndices.append((i, name))
-            leftEyeMap[name] = eyeData[0]
-            rightEyeMap[name] = eyeData[1]
+            leftEyeMap[name] = leftEye
+            rightEyeMap[name] = rightEye
 
 # create lists containing the known eye color names and the unknown eye colors.
 nameIndices = [nameIndex[0] for nameIndex in namePairIndices]
@@ -84,24 +100,21 @@ unknownData = np.delete(pgp, nameIndices, axis=0)
 # convert dictionaries to lists 
 leftEyeNameList = []
 rightEyeNameList = []
-
 # nametuple looks like (index, name)
-for nameTuple in namePairIndices:
-    name = nameTuple[1]
-    if isinstance(leftEyeMap[name], str):
+for _, name in namePairIndices:
+    if isstr(leftEyeMap[name]):
         leftEyeNameList.append(leftEyeMap[name])
-    
-    if isinstance(rightEyeMap[name], str):
+    if isstr(rightEyeMap[name]):
         rightEyeNameList.append(rightEyeMap[name])
+
+def blueOrNot(name):
+    if isstr(name) and int(name) > 13:
+        return 0 # not blue
+    elif isstr(name):
+        return 1 # blue 
     
-for i in range(len(leftEyeNameList)): # changes values to only blue/not blue for binary classification
-    if isinstance(leftEyeNameList[i], str) and int(leftEyeNameList[i]) > 13:
-        leftEyeNameList[i] = 0 # not blue
-    elif isinstance(leftEyeNameList[i], str):
-        leftEyeNameList[i] = 1 # blue
+leftEyeNameList = map(blueOrNot, leftEyeNameList)
         
-# scale the data
-knownData = preprocessing.scale(knownData.astype('double'))
 print "Finished processing data.",
 
 print "Running support vector classifier..."
