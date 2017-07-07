@@ -5,6 +5,7 @@ from sklearn import preprocessing
 import numpy as np
 import pandas as pd
 import subprocess
+import collections
 
 '''
 
@@ -110,14 +111,6 @@ for _, name in nameEyeMap:
         rightEyeNameList.append(rightEyeMap[name])
 
 blueOrNot = lambda name: 0 if int(name) > 13 else 1
-leftEyeNameList = map(blueOrNot, leftEyeNameList)
-
-def blueOrNot(name):
-    if isstr(name) and int(name) > 13:
-        return 0 # not blue
-    elif isstr(name):
-        return 1 # blue 
-    
 leftEyeNameList = map(blueOrNot, leftEyeNameList)
         
 print "Finished processing data.",
