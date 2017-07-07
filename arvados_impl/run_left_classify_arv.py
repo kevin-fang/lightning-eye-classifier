@@ -32,7 +32,7 @@ pgpSurvey = argv[6]
 
 print "Loading names, survey, and tile data..."
 # pgp eye color data from survey
-# read names that have provided survey eye color data
+## read names that have provided survey eye color data
 columns = ['name', 'timestamp', 'id', 'blood_type', 'height', 'weight', 'hw_comments', 'left', 'right', 'left_desc', 'right_desc', 'eye_comments', 'hair', 'hair_desc', 'hair_comments', 'misc', 'handedness']
 
 # pgp eye color data from survey
@@ -41,24 +41,24 @@ surveyData = pd.read_csv("./eye_color_data/PGP-Survey.csv", names=columns, na_va
 # names of the pgp participants
 surveyNames = np.asarray(surveyData['name'].values.tolist())
 
-# load numpy array of names and keep only the huID
-pgpNames = np.load("names")
-for i in range(len(pgpNames)):
-    pgpNames[i] = pgpNames[i][:8]
-
 # load numpy array of tiled PGP data 
 pgp = preprocessing.scale(np.load("hiq-pgp").astype('double'))
+
+# load numpy array of names and keep only the huID
+pgpNames = np.load("names")
+pgpNames = map(lambda name: name[:8], pgpNames)
 
 # simple lambda function to return if the input is a string
 isstr = lambda val: isinstance(val, str)
 
 print "Finished loading data.",
+eye_color = collections.namedtuple("EyeColor", ['left', 'right'])
+
 # lookup a name in the survey data and return a tuple of the eye colors
 def getAllData(name, surveyData):
     for index, row in surveyData.iterrows():
         if row['name'] == name:
-            return (row['left'], row['right'])
-        
+            return eye_color(row['left'], row['right'])
         
 # lookup a name in the survey data and return a tuple of the eye colors, excluding hazel
 def getDataNoHazel(name, surveyData):
@@ -67,10 +67,11 @@ def getDataNoHazel(name, surveyData):
             if isstr(row['left_desc']) and isstr(row['right_desc']):
                 if 'azel' in row['left_desc'] or 'azel' in row['right_desc']:
                     return None
-            return (row['left'], row['right'])
+            return eye_color(row['left'], row['right'])
         
 # list of tuples for index and name with eye color data (idx, name)
-namePairIndices = []
+nameEyeMap = []
+namePair = collections.namedtuple("NamePair", ['index', 'name'])
 
 # dictionary of left and right eye colors with respective name, i.e., {"huID": 12}
 leftEyeMap = {}
@@ -84,16 +85,17 @@ for i, name in enumerate(pgpNames):
         existingNames.append(name)
         eyeData = getDataNoHazel(name, surveyData)
         if eyeData == None:
-            continue
-        leftEye, rightEye = eyeData
-        if isstr(leftEye) and isstr(rightEye):
-            namePairIndices.append((i, name))
-            leftEyeMap[name] = leftEye
-            rightEyeMap[name] = rightEye
+            pass
+        elif isstr(eyeData.left) and isstr(eyeData.right):
+            nameEyeMap.append(namePair(i, name))
+            leftEyeMap[name] = eyeData.left
+            rightEyeMap[name] = eyeData.right
 
 # create lists containing the known eye color names and the unknown eye colors.
-nameIndices = [nameIndex[0] for nameIndex in namePairIndices]
-correspondingNames = [nameIndex[1] for nameIndex in namePairIndices]
+nameIndices, correspondingNames = [], []
+for pair in nameEyeMap:
+    nameIndices.append(pair.index)
+    correspondingNames.append(pair.name)
 knownData = pgp[nameIndices]
 unknownData = np.delete(pgp, nameIndices, axis=0)
 
@@ -101,11 +103,14 @@ unknownData = np.delete(pgp, nameIndices, axis=0)
 leftEyeNameList = []
 rightEyeNameList = []
 # nametuple looks like (index, name)
-for _, name in namePairIndices:
+for _, name in nameEyeMap:
     if isstr(leftEyeMap[name]):
         leftEyeNameList.append(leftEyeMap[name])
     if isstr(rightEyeMap[name]):
         rightEyeNameList.append(rightEyeMap[name])
+
+blueOrNot = lambda name: 0 if int(name) > 13 else 1
+leftEyeNameList = map(blueOrNot, leftEyeNameList)
 
 def blueOrNot(name):
     if isstr(name) and int(name) > 13:
