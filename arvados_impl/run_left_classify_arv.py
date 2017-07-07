@@ -36,16 +36,16 @@ print "Loading names, survey, and tile data..."
 columns = ['name', 'timestamp', 'id', 'blood_type', 'height', 'weight', 'hw_comments', 'left', 'right', 'left_desc', 'right_desc', 'eye_comments', 'hair', 'hair_desc', 'hair_comments', 'misc', 'handedness']
 
 # pgp eye color data from survey
-surveyData = pd.read_csv("./eye_color_data/PGP-Survey.csv", names=columns, na_values=['nan', '', 'NaN'])
+surveyData = pd.read_csv(pgpSurvey, names=columns, na_values=['nan', '', 'NaN'])
 
 # names of the pgp participants
 surveyNames = np.asarray(surveyData['name'].values.tolist())
 
 # load numpy array of tiled PGP data 
-pgp = preprocessing.scale(np.load("hiq-pgp").astype('double'))
+pgp = preprocessing.scale(np.load(hiqPgp).astype('double'))
 
 # load numpy array of names and keep only the huID
-pgpNames = np.load("names")
+pgpNames = np.load(names)
 pgpNames = map(lambda name: name[:8], pgpNames)
 
 # simple lambda function to return if the input is a string
