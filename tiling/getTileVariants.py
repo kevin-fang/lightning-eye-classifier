@@ -5,17 +5,27 @@ import numpy as np
 from subprocess import CalledProcessError
 
 # set up argument parsing
-parser = argparse.ArgumentParser(description="Get base pairs from tile variant or location")
+parser = argparse.ArgumentParser(description="From an index of a tile, return the tile name, variants, and/or base pair locations")
 parser.add_argument('-i', '--index', type=int, help="an index of the tile", required=True)
-parser.add_argument('-l', '--get-location', type=int, nargs='?', default=False)
-parser.add_argument('-v', '--get-variants', type=int, nargs='?', default=False)
-parser.add_argument('-b', '--get-base-pairs', type=int, nargs='?', default=False)
+parser.add_argument('-l', '--get-location', type=int, nargs='?', default=False, help="whether to get tile location (requires cat, grep, and assembly.00.hg19.fw.fwi)")
+parser.add_argument('-v', '--get-variants', type=int, nargs='?', default=False, help="whether to get tile variants (a/t/c/g) (requires zgrep and the keep collection with *.sglf.gz)")
+parser.add_argument('-b', '--get-base-pairs', type=int, nargs='?', default=False, help="whether to get base pair locations (requires bgzip and assembly.00.hg19.fw.gz)")
+parser.add_argument('--assembly-gz', type=str, nargs='?', default=None, help="location of assembly.00.hg19.fw.gz")
+parser.add_argument('--keep', type=str, nargs='?', default=None, help="location of keep collection with *.sglf.gz")
+parser.add_argument('--assembly-fwi', type=str, nargs='?', default=None, help="location of assembly.00.hg19.fw.fwi")
 args = parser.parse_args()
+print args
 
 # set None values to true for easier if statements
-if args.get_location == None: args.get_location = True
-if args.get_variants == None: args.get_variants = True
-if args.get_base_pairs == None: args.get_base_pairs = True
+if args.get_location == None: 
+    assert(args.assembly_fwi != None)
+    args.get_location = True
+if args.get_variants == None: 
+    assert(args.keep != None)
+    args.get_variants = True
+if args.get_base_pairs == None: 
+    assert(args.assembly_gz != None)
+    args.get_base_pairs = True
 
 # set up information needed for tile search
 coefPaths = np.load('hiq-pgp-info')
@@ -32,11 +42,10 @@ def tileSearch(arg):
     vecpath = str(vectorizedPath[int(arg)])
     vecpath = vecpath[2:].zfill(4)
     try:
-        proc = subprocess.check_output("cat ./assembly.00.hg19.fw.fwi | grep :" + vecpath, shell=True)
+        proc = subprocess.check_output("cat " + args.assembly_fwi + " | grep :" + vecpath, shell=True)
+        return proc
     except CalledProcessError as e:
-        print "Assembly index file not found or `cat` command not available. Exiting..."
-        sys.exit(1)
-    return proc
+        return "Assembly index file not found or `cat` command not available. Continuing..."
 
 # get the location of a tile
 def getTileLocation(raw_tile_data):
@@ -44,8 +53,9 @@ def getTileLocation(raw_tile_data):
     begin = int(split_raw[2])
     sequence = int(split_raw[1])
     hexVal = split_raw[0].split(':')[2]
-    cmdToRun = "bgzip -c -b %d -s %d -d ./assembly.00.hg19.fw.gz | grep -B1 \"%s\s\"" % (begin, sequence, hexVal)
+    cmdToRun = "bgzip -c -b %d -s %d -d %s | grep -B1 \"%s\s\"" % (begin, sequence, args.assembly_gz, hexVal)
     try:
+        subprocess.call("bgzip -r " + args.assembly_gz, shell=True)
         output = subprocess.check_output(cmdToRun, shell=True)
         return output
     except CalledProcessError as e:
@@ -72,7 +82,6 @@ tilePath = tilePath[2:].zfill(4)
 tileStep = tileStep[2:].zfill(4)
 if (args.get_variants):
     try:
-        print subprocess.check_output("zgrep %s.00.%s ~/keep/by_id/su92l-4zz18-fkbdz2w6b25ayj3/%s.sglf.gz" % (tilePath, tileStep, tilePath), shell=True) 
+        print subprocess.check_output("zgrep %s.00.%s %s/%s.sglf.gz" % (tilePath, tileStep, args.keep, tilePath), shell=True) 
     except CalledProcessError:
-        print "Collection not found or `zgrep` command not available"
-        sys.exit(1)
+        print "Collection not found or `zgrep` command not available. Finishing..."
