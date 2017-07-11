@@ -6,6 +6,7 @@ from subprocess import CalledProcessError
 
 # set up argument parsing
 parser = argparse.ArgumentParser(description="From an index of a tile, return the tile name, variants, and/or base pair locations")
+parser.add_argument('--hiq-pgp-info', type=str, help="location of hiq-pgp-info", required=True)
 parser.add_argument('-i', '--index', type=int, help="an index of the tile", required=True)
 parser.add_argument('-l', '--get-location', type=int, nargs='?', default=False, help="whether to get tile location (requires cat, grep, and assembly.00.hg19.fw.fwi)")
 parser.add_argument('-v', '--get-variants', type=int, nargs='?', default=False, help="whether to get tile variants (a/t/c/g) (requires zgrep and the keep collection with *.sglf.gz)")
@@ -14,21 +15,25 @@ parser.add_argument('--assembly-gz', type=str, nargs='?', default=None, help="lo
 parser.add_argument('--keep', type=str, nargs='?', default=None, help="location of keep collection with *.sglf.gz")
 parser.add_argument('--assembly-fwi', type=str, nargs='?', default=None, help="location of assembly.00.hg19.fw.fwi")
 args = parser.parse_args()
-print args
-
+#print args
+print "Finding:"
 # set None values to true for easier if statements
 if args.get_location == None: 
     assert(args.assembly_fwi != None)
     args.get_location = True
+    print "tile location"
 if args.get_variants == None: 
     assert(args.keep != None)
     args.get_variants = True
+    print "tile variants"
 if args.get_base_pairs == None: 
     assert(args.assembly_gz != None)
     args.get_base_pairs = True
+    print "base pair location"
+print
 
 # set up information needed for tile search
-coefPaths = np.load('hiq-pgp-info')
+coefPaths = np.load(args.hiq_pgp_info)
 tile_path = np.trunc(coefPaths/(16**5))
 tile_step = np.trunc((coefPaths - tile_path*16**5)/2)
 tile_phase = np.trunc((coefPaths - tile_path*16**5 - 2*tile_step))
