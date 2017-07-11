@@ -65,7 +65,8 @@ if (args.get_location):
 # print out base pairs if needed
 if (args.get_base_pairs):
     print getTileLocation(tile)
-print
+    print
+
 # print out tiles if needed
 tilePath = tilePath[2:].zfill(4)
 tileStep = tileStep[2:].zfill(4)
