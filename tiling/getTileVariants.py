@@ -3,33 +3,54 @@
 import subprocess, argparse
 import numpy as np
 from subprocess import CalledProcessError
+import sys
+
+class color:
+    RED = '\033[91m'
+    END = '\033[0m'
 
 # set up argument parsing
 parser = argparse.ArgumentParser(description="From an index of a tile, return the tile name, variants, and/or base pair locations")
-parser.add_argument('--hiq-pgp-info', type=str, help="location of hiq-pgp-info", required=True)
-parser.add_argument('-i', '--index', type=int, help="an index of the tile", required=True)
-parser.add_argument('-l', '--get-location', type=int, nargs='?', default=False, help="whether to get tile location (requires cat, grep, and assembly.00.hg19.fw.fwi)")
-parser.add_argument('-v', '--get-variants', type=int, nargs='?', default=False, help="whether to get tile variants (a/t/c/g) (requires zgrep and the keep collection with *.sglf.gz)")
-parser.add_argument('-b', '--get-base-pairs', type=int, nargs='?', default=False, help="whether to get base pair locations (requires bgzip and assembly.00.hg19.fw.gz)")
-parser.add_argument('--assembly-gz', type=str, nargs='?', default=None, help="location of assembly.00.hg19.fw.gz")
-parser.add_argument('--keep', type=str, nargs='?', default=None, help="location of keep collection with *.sglf.gz")
-parser.add_argument('--assembly-fwi', type=str, nargs='?', default=None, help="location of assembly.00.hg19.fw.fwi")
+parser.add_argument('--hiq-pgp-info', type=str, help="Location of hiq-pgp-info", required=True)
+parser.add_argument('-i', '--index', type=int, help="An index of the tile", required=True)
+parser.add_argument('-l', '--get-location', type=int, nargs='?', default=False, help="Whether to get tile location (requires cat, grep, and assembly.00.hg19.fw.fwi)")
+parser.add_argument('-v', '--get-variants', type=int, nargs='?', default=False, help="Whether to get tile variants (a/t/c/g) (requires zgrep and the keep collection with *.sglf.gz)")
+parser.add_argument('-vd', '--get-variants-diff', type=int, nargs='?', default=False, help="Whether to get tile variants (a/t/c/g) with diffs. Takes longer than -v, still requires zgrep and keep collection.")
+parser.add_argument('-b', '--get-base-pairs', type=int, nargs='?', default=False, help="Whether to get base pair locations (requires bgzip and assembly.00.hg19.fw.gz)")
+parser.add_argument('--assembly-gz', type=str, nargs='?', default=None, help="Location of assembly.00.hg19.fw.gz")
+parser.add_argument('--keep', type=str, nargs='?', default=None, help="Location of keep collection with *.sglf.gz")
+parser.add_argument('--assembly-fwi', type=str, nargs='?', default=None, help="Location of assembly.00.hg19.fw.fwi")
 args = parser.parse_args()
-#print args
+if args.get_location == args.get_variants == args.get_variants_diff == args.get_base_pairs == False:
+    print "Nothing to find. Exiting..."
+    sys.exit(0) 
+
 print "Finding:"
-# set None values to true for easier if statements
+# set None values to true for easier if statements and print if any arguments are missing
 if args.get_location == None: 
-    assert(args.assembly_fwi != None)
+    if args.assembly_fwi == None:
+        print "Cannot get tile location without --assembly-fwi argument. Exiting..."
+        sys.exit(1)
     args.get_location = True
-    print "tile location"
+    print "Tile location"
 if args.get_variants == None: 
-    assert(args.keep != None)
+    if args.keep == None:
+        print "Cannot get variants without --keep argument. Exiting..."
+        sys.exit(1)
     args.get_variants = True
-    print "tile variants"
+    print "Tile variants"
+if args.get_variants_diff == None:
+    if args.keep == None:
+        print "Cannot get variant diffs without --keep argument. Exiting..."
+        sys.exit(1)
+    args.get_variants_diff = True
+    print "Tile variant with differences"
 if args.get_base_pairs == None: 
-    assert(args.assembly_gz != None)
+    if args.assembly_gz == None:
+        print "Cannot get base pair location without --assembly-gz argument. Exiting..."
+        sys.exit(1)
     args.get_base_pairs = True
-    print "base pair location"
+    print "Base pair location"
 print
 
 # set up information needed for tile search
@@ -70,8 +91,8 @@ def getTileLocation(raw_tile_data):
 tilePath = vectorizedPath[args.index]
 tileStep = vectorizedStep[args.index]
 tilePhase = vectorizedPhase[args.index]
-tile = tileSearch(args.index)
 if (args.get_location):
+    tile = tileSearch(args.index)
     print "Tile Path:", tilePath
     print "Tile Step:", tileStep 
     print "Tile Phase:", tilePhase 
@@ -85,8 +106,40 @@ if (args.get_base_pairs):
 # print out tiles if needed
 tilePath = tilePath[2:].zfill(4)
 tileStep = tileStep[2:].zfill(4)
+
 if (args.get_variants):
     try:
-        print subprocess.check_output("zgrep %s.00.%s %s/%s.sglf.gz" % (tilePath, tileStep, args.keep, tilePath), shell=True) 
+        variants = subprocess.check_output("zgrep %s.00.%s %s/%s.sglf.gz" % (tilePath, tileStep, args.keep, tilePath), shell=True)
     except CalledProcessError:
         print "Collection not found or `zgrep` command not available. Finishing..."
+        sys.exit()
+    print variants
+
+if (args.get_variants_diff):
+    try:
+        variants = subprocess.check_output("zgrep %s.00.%s %s/%s.sglf.gz" % (tilePath, tileStep, args.keep, tilePath), shell=True) 
+    except CalledProcessError:
+        print "Collection not found or `zgrep` command not available. Finishing..."
+	sys.exit()
+    variants = variants.split('\n')[:-1]
+    for i, variant in enumerate(variants):
+	variants[i] = variant.split(',')
+    differentIndices = []
+    sequences = []
+    for _, _, sequence in variants:
+        sequences.append(sequence)
+    for i, letter in enumerate(sequences[0]):
+        diff = False
+	for sequence in sequences:
+            if diff == False and sequence[i] != letter:
+                differentIndices.append(i)
+                diff = True 
+    
+    for variant in variants:
+        print ",".join(variant[:-1]),
+        for i, letter in enumerate(variant[2]):
+            if i in differentIndices:
+                sys.stdout.write(color.RED + letter + color.END) 
+            else:
+                sys.stdout.write(letter)
+        print
