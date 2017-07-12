@@ -51,7 +51,7 @@ if args.get_base_pairs == None:
         sys.exit(1)
     args.get_base_pairs = True
     print "Base pair location"
-print
+print "For index", args.index, '\n'
 
 # set up information needed for tile search
 coefPaths = np.load(args.hiq_info)
@@ -136,18 +136,19 @@ if (args.get_variants_diff):
     for _, _, sequence in variants:
         sequences.append(sequence)
     
+    maxList = max(enumerate(sequences), key = lambda tup: len(tup[1]))[1]
     # loop through sequences and check for differences in base pairs. If there is, then append to list
-    for i, letter in enumerate(sequences[0]):
+    for i, letter in enumerate(maxList):
         diff = False
 	for sequence in sequences:
-            if diff == False and sequence[i] != letter:
+            if diff == False and (i >= len(sequence) or sequence[i] != letter):
                 differentIndices.append(i)
                 diff = True 
     
     # print out results 
     for variant in variants:
         # print out tile name and hash value
-        print ",".join(variant[:-1]),
+        print ",".join(variant[:-1]) + ",",
         
         # write to stdout (so there won't be spaces after each letter) in color.RED if there are differences and normal color if there aren't 
         for i, letter in enumerate(variant[2]):
