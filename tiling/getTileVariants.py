@@ -126,7 +126,7 @@ if (args.get_variants_diff):
         print "Collection not found or `zgrep` command not available. Finishing..."
 	sys.exit()
     
-    print "Variant information:"
+    print "Variant information (" + color.RED + "red" + color.END + " denotes a different base pair):"
     # split into each variant
     variants = variants.split('\n')[:-1]
     for i, variant in enumerate(variants):
