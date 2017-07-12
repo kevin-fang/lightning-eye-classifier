@@ -107,6 +107,7 @@ if (args.get_base_pairs):
 tilePath = tilePath[2:].zfill(4)
 tileStep = tileStep[2:].zfill(4)
 
+# get tile variants using zgrep command on keep collection
 if (args.get_variants):
     try:
         variants = subprocess.check_output("zgrep %s.00.%s %s/%s.sglf.gz" % (tilePath, tileStep, args.keep, tilePath), shell=True)
@@ -115,12 +116,15 @@ if (args.get_variants):
         sys.exit()
     print variants
 
+# get differences in variants using zgrep and difference checking
 if (args.get_variants_diff):
     try:
         variants = subprocess.check_output("zgrep %s.00.%s %s/%s.sglf.gz" % (tilePath, tileStep, args.keep, tilePath), shell=True) 
     except CalledProcessError:
         print "Collection not found or `zgrep` command not available. Finishing..."
 	sys.exit()
+    
+    # split into each variant
     variants = variants.split('\n')[:-1]
     for i, variant in enumerate(variants):
 	variants[i] = variant.split(',')
@@ -128,6 +132,8 @@ if (args.get_variants_diff):
     sequences = []
     for _, _, sequence in variants:
         sequences.append(sequence)
+    
+    # loop through sequences and check for differences in base pairs. If there is, then append to list
     for i, letter in enumerate(sequences[0]):
         diff = False
 	for sequence in sequences:
@@ -135,8 +141,12 @@ if (args.get_variants_diff):
                 differentIndices.append(i)
                 diff = True 
     
+    # print out results 
     for variant in variants:
+        # print out tile name and hash value
         print ",".join(variant[:-1]),
+        
+        # write to stdout (so there won't be spaces after each letter) in color.RED if there are differences and normal color if there aren't 
         for i, letter in enumerate(variant[2]):
             if i in differentIndices:
                 sys.stdout.write(color.RED + letter + color.END) 
