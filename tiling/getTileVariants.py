@@ -11,7 +11,7 @@ class color:
 
 # set up argument parsing
 parser = argparse.ArgumentParser(description="From an index of a tile, return the tile name, variants, and/or base pair locations")
-parser.add_argument('--hiq-pgp-info', type=str, help="Location of hiq-pgp-info", required=True)
+parser.add_argument('--hiq-info', type=str, help="Location of tile names (for PGP, it is called hiq-pgp-info)", required=True)
 parser.add_argument('-i', '--index', type=int, help="An index of the tile", required=True)
 parser.add_argument('-l', '--get-location', type=int, nargs='?', default=False, help="Whether to get tile location (requires cat, grep, and assembly.00.hg19.fw.fwi)")
 parser.add_argument('-v', '--get-variants', type=int, nargs='?', default=False, help="Whether to get tile variants (a/t/c/g) (requires zgrep and the keep collection with *.sglf.gz)")
@@ -54,7 +54,7 @@ if args.get_base_pairs == None:
 print
 
 # set up information needed for tile search
-coefPaths = np.load(args.hiq_pgp_info)
+coefPaths = np.load(args.hiq_info)
 tile_path = np.trunc(coefPaths/(16**5))
 tile_step = np.trunc((coefPaths - tile_path*16**5)/2)
 tile_phase = np.trunc((coefPaths - tile_path*16**5 - 2*tile_step))
@@ -92,16 +92,17 @@ tilePath = vectorizedPath[args.index]
 tileStep = vectorizedStep[args.index]
 tilePhase = vectorizedPhase[args.index]
 if (args.get_location):
+    print "Tile information:"
     tile = tileSearch(args.index)
     print "Tile Path:", tilePath
     print "Tile Step:", tileStep 
     print "Tile Phase:", tilePhase 
-    print tile
+    print tile.rstrip() + '\n'
 
 # print out base pairs if needed
 if (args.get_base_pairs):
-    print getTileLocation(tile)
-    print
+    print "Base pair location:"
+    print getTileLocation(tile).rstrip() + '\n'
 
 # print out tiles if needed
 tilePath = tilePath[2:].zfill(4)
@@ -114,6 +115,7 @@ if (args.get_variants):
     except CalledProcessError:
         print "Collection not found or `zgrep` command not available. Finishing..."
         sys.exit()
+    print "Variant information:"
     print variants
 
 # get differences in variants using zgrep and difference checking
@@ -124,6 +126,7 @@ if (args.get_variants_diff):
         print "Collection not found or `zgrep` command not available. Finishing..."
 	sys.exit()
     
+    print "Variant information:"
     # split into each variant
     variants = variants.split('\n')[:-1]
     for i, variant in enumerate(variants):
