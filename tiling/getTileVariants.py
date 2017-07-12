@@ -11,8 +11,8 @@ class color:
 
 # set up argument parsing
 parser = argparse.ArgumentParser(description="From an index of a tile, return the tile name, variants, and/or base pair locations")
-parser.add_argument('--hiq-info', type=str, help="Location of tile names (for PGP, it is called hiq-pgp-info)", required=True)
 parser.add_argument('-i', '--index', type=int, help="An index of the tile", required=True)
+parser.add_argument('--hiq-info', type=str, help="Location of tile names (for PGP, it is called hiq-pgp-info)", required=True)
 parser.add_argument('-l', '--get-location', type=int, nargs='?', default=False, help="Whether to get tile location (requires cat, grep, and assembly.00.hg19.fw.fwi)")
 parser.add_argument('-v', '--get-variants', type=int, nargs='?', default=False, help="Whether to get tile variants (a/t/c/g) (requires zgrep and the keep collection with *.sglf.gz)")
 parser.add_argument('-vd', '--get-variants-diff', type=int, nargs='?', default=False, help="Whether to get tile variants (a/t/c/g) with diffs. Takes longer than -v, still requires zgrep and keep collection.")
@@ -21,6 +21,7 @@ parser.add_argument('--assembly-gz', type=str, nargs='?', default=None, help="Lo
 parser.add_argument('--keep', type=str, nargs='?', default=None, help="Location of keep collection with *.sglf.gz")
 parser.add_argument('--assembly-fwi', type=str, nargs='?', default=None, help="Location of assembly.00.hg19.fw.fwi")
 args = parser.parse_args()
+
 if args.get_location == args.get_variants == args.get_variants_diff == args.get_base_pairs == False:
     print "Nothing to find. Exiting..."
     sys.exit(0) 
@@ -55,9 +56,9 @@ print "For index", args.index, '\n'
 
 # set up information needed for tile search
 coefPaths = np.load(args.hiq_info)
-tile_path = np.trunc(coefPaths/(16**5))
-tile_step = np.trunc((coefPaths - tile_path*16**5)/2)
-tile_phase = np.trunc((coefPaths - tile_path*16**5 - 2*tile_step))
+tile_path = np.trunc(coefPaths / (16 ** 5))
+tile_step = np.trunc((coefPaths - tile_path * 16 ** 5) / 2)
+tile_phase = np.trunc((coefPaths - tile_path * 16 ** 5 - 2 * tile_step))
 vhex = np.vectorize(hex)
 vectorizedPath = vhex(tile_path.astype('int'))
 vectorizedStep = vhex(tile_step.astype('int'))
@@ -104,7 +105,7 @@ if (args.get_base_pairs):
     print "Base pair location:"
     print getTileLocation(tile).rstrip() + '\n'
 
-# print out tiles if needed
+# format tilePath by removing 0x value and padding with spaces so length = 4 
 tilePath = tilePath[2:].zfill(4)
 tileStep = tileStep[2:].zfill(4)
 
@@ -150,10 +151,19 @@ if (args.get_variants_diff):
         # print out tile name and hash value
         print ",".join(variant[:-1]) + ",",
         
+        diffStatus = False
         # write to stdout (so there won't be spaces after each letter) in color.RED if there are differences and normal color if there aren't 
         for i, letter in enumerate(variant[2]):
-            if i in differentIndices:
-                sys.stdout.write(color.RED + letter + color.END) 
-            else:
+            if i + 1 in differentIndices and not diffStatus:
                 sys.stdout.write(letter)
-        print
+                sys.stdout.write(color.RED)
+                diffStatus = True
+            elif i + 1 in differentIndices and diffStatus:
+                sys.stdout.write(letter)
+            elif i + 1 not in differentIndices and diffStatus:
+                sys.stdout.write(letter)
+                sys.stdout.write(color.END)
+                diffStatus = False
+            elif i + 1 not in differentIndices and not diffStatus:
+                sys.stdout.write(letter)
+        print color.END
