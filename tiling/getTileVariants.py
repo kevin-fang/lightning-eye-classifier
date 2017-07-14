@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+# Created by Kevin Fang, 2017 at Curoverse.
+# Searches for tile name, base pairs, and variants
 
 import subprocess, argparse
 import numpy as np
@@ -102,6 +104,7 @@ if (args.get_location):
 # print out base pairs if needed
 if (args.get_base_pairs):
     print "Base pair location:"
+    tile = tileSearch(args.index)
     print getTileLocation(tile).rstrip() + '\n'
 
 # print out tiles if needed
@@ -115,7 +118,7 @@ if (args.get_variants):
     except CalledProcessError:
         print "Collection not found or `zgrep` command not available. Finishing..."
         sys.exit()
-    print "Variant information:"
+    print "Variant Information:"
     print variants
 
 # get differences in variants using zgrep and difference checking
@@ -126,7 +129,7 @@ if (args.get_variants_diff):
         print "Collection not found or `zgrep` command not available. Finishing..."
 	sys.exit()
     
-    print "Variant information:"
+    print "Variant Diff Information"
     # split into each variant
     variants = variants.split('\n')[:-1]
     for i, variant in enumerate(variants):
