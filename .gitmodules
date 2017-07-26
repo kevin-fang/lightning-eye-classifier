@@ -4,3 +4,6 @@
 [submodule "tiling-server"]
 	path = tiling-server
 	url = https://github.com/kevin-fang/Tiling-Server.git
+[submodule "tile-searcher"]
+	path = tile-searcher
+	url = https://github.com/kevin-fang/tile-searcher
