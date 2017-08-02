@@ -1,4 +1,4 @@
-# Eye Color Classification using Support Vector Machines
+# Eye Color Classification w/SVM
 ### Kevin Fang, Curoverse, 2017
 Note: before running, the dependencies must be downloaded.
 
