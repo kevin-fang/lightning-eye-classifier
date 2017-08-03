@@ -6,7 +6,7 @@ In this project, we used machine learning to classify eye colors. The GitHub rep
 
 We used support vector machines to classify genomes by eye color using data from the Personal Genome Project processed through the Arvados Lightning Project.
 
-## To run the program:
+## Run the program:
 
 Note: before running, the dependencies must be downloaded.
 
