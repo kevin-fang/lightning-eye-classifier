@@ -1,5 +1,14 @@
-# Eye Color Classification w/SVM
+# Eye Color Classification with Machine Learning
 ### Kevin Fang, Curoverse, 2017
+
+Repository available here: https://github.com/kevin-fang/lightning-eye-classifier. 
+
+## Project
+
+We used support vector machines to classify genomes by eye color using genomes from the Personal Genome Project processed through the Arvados Lightning Project.
+
+## To run the program:
+
 Note: before running, the dependencies must be downloaded.
 
 This project is reliant on the following Python libraries: scikit-learn, pandas, matplotlib, numpy, scipy. In addition, the tile searches cannot be run on non-UNIX machines as it requires the system `grep` and `cat` commands.
