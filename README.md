@@ -1,6 +1,6 @@
 ### Kevin Fang, Curoverse, 2017
 
-In this project, we used machine learning to classify eye colors. The repository is available on [Github](https://github.com/kevin-fang/lightning-eye-classifier)
+In this project, we used machine learning to classify eye colors. The repository is available on [GitHub](https://github.com/kevin-fang/lightning-eye-classifier).
 
 ## Project
 
