@@ -1,11 +1,10 @@
-# Eye Color Classification with Machine Learning
 ### Kevin Fang, Curoverse, 2017
 
-Repository available here: https://github.com/kevin-fang/lightning-eye-classifier. 
+In this project, we used machine learning to classify eye colors. The GitHub repository available here: https://github.com/kevin-fang/lightning-eye-classifier. 
 
 ## Project
 
-We used support vector machines to classify genomes by eye color using genomes from the Personal Genome Project processed through the Arvados Lightning Project.
+We used support vector machines to classify genomes by eye color using data from the Personal Genome Project processed through the Arvados Lightning Project.
 
 ## To run the program:
 
