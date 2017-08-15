@@ -1,4 +1,5 @@
 hiq-pgp.npy
+out_of_core/
 tensorflow/
 *.swp
 names
