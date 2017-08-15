@@ -7,6 +7,10 @@ This project is reliant on the following Python libraries: `scikit-learn, pandas
 
 To download the NumPy arrays and assembly files needed for the project, set the Arvados API tokens and run `./download_dependencies.sh` - this downloads the tiled data, names, information, and assembly files into the appropriate folders.
 
+### Running the classifier
+
+First, clone the GitHub repository with `git clone --recursive https://github.com/kevin-fang/lightning-eye-classifier`. The `--recursive` is important as the tile-searching script is there.
+
 There are three ways to run the classifier:
 
 Run the Python scripts by themselves:
