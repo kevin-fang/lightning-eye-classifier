@@ -9,19 +9,19 @@ To download the NumPy arrays and assembly files needed for the project, set the 
 
 ### Running the classifier
 
-First, clone the GitHub repository with `git clone --recursive https://github.com/kevin-fang/lightning-eye-classifier`. The `--recursive` is important as the tile-searching script is there.
+First, clone the GitHub repository with `git clone --recursive https://github.com/kevin-fang/lightning-eye-classifier`. The `--recursive` is important as the tile-searching script is in a submodule.
 
 There are three ways to run the classifier:
 
-Run the Python scripts by themselves:
+#### Run the Python scripts by themselves:
 1. Navigate to `src/`.
 2. Generate the classifier with `python generateLeftClassifier.py`
 3. Save the coefficients with `python saveCoefs.py`
 4. Search for each tile in `python tileSearch.py`
 
-Run the Arvados workflow in `arvados_impl/`
+#### Run the Arvados workflow in `arvados_impl/`
 
-Run the interactive Python notebooks:  
+#### Run the interactive Python notebooks:  
 1. First, navigate to `notebooks/`
 2. Open the IPython session using `jupyter notebook`  
 3. Open `leftEyeClassifier.ipynb`, `saveCoefs.ipynb`, and `tileSearch.ipynb`.  
