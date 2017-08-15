@@ -7,12 +7,23 @@ This project is reliant on the following Python libraries: `scikit-learn, pandas
 
 To download the NumPy arrays and assembly files needed for the project, set the Arvados API tokens and run `./download_dependencies.sh` - this downloads the tiled data, names, information, and assembly files into the appropriate folders.
 
-To run the classifier and get the base pairs responsible for left eye color, run the Arvados workflow in `arvados_impl/` or run it through the interactive python session:  
-1. First, open the iPython session using `jupyter notebook`  
-2. Open `leftEyeClassifier.ipynb`, `generateAndSaveCoefs.ipynb`, and `TileSearch.ipynb`.  
-3. Run `leftEyeClassifier.ipynb` first. This will generate the classifier and save it in  `svc.pkl`.  
-4. Then run `generateAndSaveCoefs.ipynb`. This will open the `svc.pkl` classifier and will serialize the learned coefficients in `coefs.pkl`.  
-5. Finally, run `tileSearch.ipynb`. This will open `coefs.pkl` and search for each tile.  
+There are three ways to run the classifier:
+
+Run the Python scripts by themselves:
+1. Navigate to `src/`.
+2. Generate the classifier with `python generateLeftClassifier.py`
+3. Save the coefficients with `python saveCoefs.py`
+4. Search for each tile in `python tileSearch.py`
+
+Run the Arvados workflow in `arvados_impl/`
+
+Run the interactive Python notebooks:  
+1. First, navigate to `notebooks/`
+2. Open the IPython session using `jupyter notebook`  
+3. Open `leftEyeClassifier.ipynb`, `saveCoefs.ipynb`, and `tileSearch.ipynb`.  
+4. Run `leftEyeClassifier.ipynb` first, and set whether to exclude or include hazel. This will generate the classifier and save it in  `svc.pkl`.  
+5. Then run `saveCoefs.ipynb`. This will open the `svc.pkl` classifier and will serialize the learned coefficients in `coefs.pkl`.  
+6. Finally, run `tileSearch.ipynb`. This will open `coefs.pkl` and search for each tile.  
 
 ## Details
 The classifier is able to predict the blue eye color to approximately 95% accuracy when the hazel color is excluded. Otherwise, it is able to reach 88% accuracy. 
