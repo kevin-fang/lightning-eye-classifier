@@ -1,5 +1,5 @@
 # Genomic Eye Color Classification with Machine Learning
-###Kevin Fang, Curoverse 2017
+### Kevin Fang, Curoverse 2017
 
 Using machine learning and the Arvados Lightning project, we were able to predict eye color to 95% accuracy.
 
