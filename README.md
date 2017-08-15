@@ -9,7 +9,7 @@ To download the NumPy arrays and assembly files needed for the project, set the 
 
 ### Running the classifier
 
-First, clone the GitHub repository with `git clone --recursive https://github.com/kevin-fang/lightning-eye-classifier`. The `--recursive` is important as the tile-searching script is there.
+First, clone the GitHub repository with `git clone --recursive https://github.com/kevin-fang/lightning-eye-classifier`. The `--recursive` is important as the tile-searching script is in a submodule.
 
 There are three ways to run the classifier:
 
