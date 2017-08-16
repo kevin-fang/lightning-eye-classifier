@@ -1,25 +1,34 @@
-### Kevin Fang, Curoverse, 2017
+### Kevin Fang, Curoverse 2017
+[![DOI-project](https://www.zenodo.org/badge/DOI/10.5281/zenodo.843564.svg)](https://doi.org/10.5281/zenodo.843564) [![DOI-poster](https://zenodo.org/badge/DOI/10.5281/zenodo.843566.svg)](https://doi.org/10.5281/zenodo.843566)
 
-In this project, we used machine learning to classify eye colors. The repository is available on [GitHub](https://github.com/kevin-fang/lightning-eye-classifier).
 
-## Project
+Using machine learning and the Arvados Lightning project, we were able to predict eye color to 95% accuracy.
 
-We used support vector machines to classify genomes by eye color using data from the Personal Genome Project processed through the Arvados Lightning Project.
+This project is reliant on the following Python libraries: `scikit-learn, pandas, matplotlib, numpy, scipy.` In addition, the tile searches cannot be run on non-UNIX machines as it requires the system `grep` and `cat` commands.
 
-## Run the program:
+To download the NumPy arrays and assembly files needed for the project, set the Arvados API tokens and run `./download_dependencies.sh` - this downloads the tiled data, names, information, and assembly files into the appropriate folders.
 
-Note: before running, the dependencies must be downloaded.
+### Running the classifier
 
-This project is reliant on the following Python libraries: scikit-learn, pandas, matplotlib, numpy, scipy. In addition, the tile searches cannot be run on non-UNIX machines as it requires the system `grep` and `cat` commands.
+First, clone the GitHub repository with `git clone --recursive https://github.com/kevin-fang/lightning-eye-classifier`. The `--recursive` is important as the tile-searching script is in a submodule.
 
-To download the numpy and assembly files needed for the project, set your Arvados API tokens and run `./download_dependencies.sh` - this downloads the tiled data, names, information, and assembly files.
+There are three ways to run the classifier:
 
-To run the classifier and get the base pairs responsible for left eye color, run the Arvados workflow in `arvados_impl/` or run it through the interactive python session:  
-1. First, open the iPython session using `jupyter notebook`  
-2. Open `leftEyeClassifier.ipynb`, `generateAndSaveCoefs.ipynb`, and `TileSearch.ipynb`.  
-3. Run `leftEyeClassifier.ipynb` first. This will generate the classifier and store it in a file called `svc.pkl`.  
-4. Then run `generateAndSaveCoefs.ipynb`. This will open the `svc.pkl` classifier and save the coefficients in a file called `coefs.pkl`.  
-5. Finally, run `TileSearch.ipynb`. This will open `coefs.pkl` and search for each tile.  
+#### Run the Python scripts by themselves:
+1. Navigate to `src/`.
+2. Generate the classifier with `python generateLeftClassifier.py`
+3. Save the coefficients with `python saveCoefs.py`
+4. Search for each tile in `python tileSearch.py`
+
+#### Run the Arvados workflow in `arvados_impl/`
+
+#### Run the interactive Python notebooks:  
+1. First, navigate to `notebooks/`
+2. Open the IPython session using `jupyter notebook`  
+3. Open `leftEyeClassifier.ipynb`, `saveCoefs.ipynb`, and `tileSearch.ipynb`.  
+4. Run `leftEyeClassifier.ipynb` first, and set whether to exclude or include hazel. This will generate the classifier and save it in  `svc.pkl`.  
+5. Then run `saveCoefs.ipynb`. This will open the `svc.pkl` classifier and will serialize the learned coefficients in `coefs.pkl`.  
+6. Finally, run `tileSearch.ipynb`. This will open `coefs.pkl` and search for each tile.  
 
 ## Details
 The classifier is able to predict the blue eye color to approximately 95% accuracy when the hazel color is excluded. Otherwise, it is able to reach 88% accuracy. 
