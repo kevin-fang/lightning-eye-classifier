@@ -10,7 +10,9 @@ Once this is you are in the docker container, you can follow the instructions in
 
 #### Run Jupyter Notebooks in Docker:
 
-Run `docker run -it -p 8888:8888 -v $PWD/..:/lightning-classify eye_classify /bin/bash -c "cd /lightning-classify && jupyter notebook"`
+`./run_script.sh` will build a docker image with all the dependencies and run it, opening a jupyter notebook (this will take a while, depending on your internet connection and computer speed).
+
+Run `docker run -it -p 8888:8888 -v $PWD/..:/lightning-classify eye_classify /bin/bash -c "cd /lightning-classify && jupyter notebook --allow-root"` 
 
 In the command prompt, there should be an IP address with a token that looks something like:
 ```
