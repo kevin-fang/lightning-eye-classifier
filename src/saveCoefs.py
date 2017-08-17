@@ -5,7 +5,6 @@ import pandas as pd
 import math
 from sklearn.model_selection import cross_val_score, train_test_split
 from sklearn.externals import joblib
-import matplotlib.pyplot as plt
 
 # load the saved support vector classifier
 svc_test = joblib.load("svc.pkl")

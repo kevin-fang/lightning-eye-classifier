@@ -1,4 +1,8 @@
 hiq-pgp.npy
+.conda
+.local
+.ipython
+.jupyter
 .ipynb_checkpoints/
 out_of_core/
 tensorflow/
@@ -12,4 +16,3 @@ hiq-pgp
 *.fw
 *.pkl
 *.npy
-
