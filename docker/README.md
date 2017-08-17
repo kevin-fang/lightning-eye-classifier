@@ -8,7 +8,7 @@ The base command to start the docker container ***from this directory*** is: `do
 
 Once this is you are in the docker container, you can follow the instructions in the main readme for the Python scripts.
 
-#### Run Jupyter Notebooks:
+#### Run Jupyter Notebooks in Docker:
 
 Run `docker run -it -p 8888:8888 -v $PWD/..:/lightning-classify eye_classify /bin/bash -c "cd /lightning-classify && jupyter notebook"`
 
