@@ -2,9 +2,13 @@
 
 To build the docker image, run `docker build -t eye_classify .`. Before running any analysis, the dependencies must be downloaded still, so go up one directory and run `./download_dependencies.sh`
 
-The base command to start the docker container ***from this directory*** is: `docker run -it -p 8888:8888 -v $PWD/..:/lightning-classify eye_classify /bin/bash -c "cd /lightning-classify && /bin/bash"`
+The base command to start the interactive docker container ***from this directory*** is: `docker run -it -p 8888:8888 -v $PWD/..:/lightning-classify eye_classify /bin/bash -c "cd /lightning-classify && /bin/bash"`
 
-**If you are in the main directory**, run `docker run -it -p 8888:8888 -v $PWD:/lightning-classify eye_classify /bin/bash -c "cd /lightning-classify && /bin/bash"`
+For a single command that will run all the analysis, run `docker run -it -v $PWD/..:/lightning-classify eye_classify /bin/bash -c "cd /lightning-classify/src && python generateLeftClassifier.py && python saveCoefs.py && python tileSearch.py"`
+
+**If you are in the main directory**, remove the `/..` after `$PWD`.
+
+
 
 Once this is you are in the docker container, you can follow the instructions in the main readme for the Python scripts.
 
