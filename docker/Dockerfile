@@ -1,4 +1,5 @@
 FROM ubuntu:latest
+MAINTAINER Kevin Fang <kevinzfang@gmail.com>
 USER root
 
 # install necessary dependencies

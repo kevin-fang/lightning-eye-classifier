@@ -6,6 +6,7 @@ import numpy as np
 import subprocess
 import re
 
+print "Loading tile libraries.."
 # load the coefficient paths from pgp data and generate tile path, step, and phase.
 coefPaths = np.load("../tile-searcher/tiling-files/hiq-pgp-info")
 tile_path = np.trunc(coefPaths/(16**5))
@@ -44,6 +45,7 @@ def getTileInfo(index):
 
 # load generated coefficients (sorted by weight)
 coefs = np.load("coefs.pkl")
+print "Results:\n"
 
 # search for the specific tile location from the coefficients
 tileLocations = []

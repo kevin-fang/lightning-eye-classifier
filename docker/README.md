@@ -12,13 +12,13 @@ Once this is you are in the docker container, you can follow the instructions in
 
 `./run_script.sh` will build a docker image with all the dependencies and run it, opening a jupyter notebook (this will take a while, depending on your internet connection and computer speed).
 
-Run `docker run -it -p 8888:8888 -v $PWD/..:/lightning-classify eye_classify /bin/bash -c "cd /lightning-classify && jupyter notebook --allow-root"` 
+Run `docker run -it -p 8888:8888 -v $PWD/..:/lightning-classify eye_classify /bin/bash -c "cd /lightning-classify && jupyter notebook --allow-root --ip=0.0.0.0"` 
 
 In the command prompt, there should be an IP address with a token that looks something like:
 ```
     Copy/paste this URL into your browser when you connect for the first time,
     to login with a token:
-        http://localhost:8888/?token=[...]
+        http://0.0.0.0:8888/?token=[...]
 ```
 
 Open that link in your browser and then you can follow the instructions for running the notebooks in the main readme.
