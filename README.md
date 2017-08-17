@@ -1,13 +1,13 @@
 # Genomic Eye Color Classification with Machine Learning
 ### Kevin Fang, Curoverse 2017
-[![DOI-project](https://www.zenodo.org/badge/DOI/10.5281/zenodo.843564.svg)](https://doi.org/10.5281/zenodo.843564) [![DOI-poster](https://zenodo.org/badge/DOI/10.5281/zenodo.843566.svg)](https://doi.org/10.5281/zenodo.843566)
+[![DOI-project](https://www.zenodo.org/badge/DOI/10.5281/zenodo.843564.svg)](https://doi.org/10.5281/zenodo.843563) [![DOI-poster](https://zenodo.org/badge/DOI/10.5281/zenodo.843566.svg)](https://doi.org/10.5281/zenodo.843566)
 
 
 Using machine learning and the Arvados Lightning project, we were able to predict eye color to 95% accuracy.
 
 This project is reliant on the following Python libraries: `scikit-learn, pandas, matplotlib, numpy, scipy.` In addition, the tile searches cannot be run on non-UNIX machines as it requires the system `grep` and `cat` commands.
 
-To download the NumPy arrays and assembly files needed for the project, set the Arvados API tokens and run `./download_dependencies.sh` - this downloads the tiled data, names, information, and assembly files into the appropriate folders.
+To download the NumPy arrays and assembly files needed for the project, [set the Arvados API tokens](https://doc.arvados.org/user/reference/api-tokens.html) and run `./download_dependencies.sh` - this downloads the tiled data, names, information, and assembly files into the appropriate folders.
 
 ### Running the classifier
 
