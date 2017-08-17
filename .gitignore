@@ -5,7 +5,6 @@ hiq-pgp.npy
 .jupyter
 .ipynb_checkpoints/
 out_of_core/
-tensorflow/
 *.swp
 names
 hiq-pgp-info
