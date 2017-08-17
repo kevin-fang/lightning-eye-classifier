@@ -11,7 +11,7 @@ To download the NumPy arrays and assembly files needed for the project, set the 
 
 First, clone the GitHub repository with `git clone --recursive https://github.com/kevin-fang/lightning-eye-classifier`. The `--recursive` is important as the tile-searching script is in a submodule.
 
-There are three ways to run the classifier:
+There are three ways to run the classifier. A Dockerfile has been provided in `docker/` as well as instructions for running through Docker. 
 
 #### Run the Python scripts by themselves:
 1. Navigate to `src/`.
