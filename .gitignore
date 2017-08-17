@@ -1,6 +1,5 @@
 hiq-pgp.npy
 .ipynb_checkpoints/
-out_of_core/
 tensorflow/
 *.swp
 names
