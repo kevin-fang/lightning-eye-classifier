@@ -18,7 +18,7 @@ coefs.sort(key = lambda x: x[1], reverse=True)
 
 print "The classifier produced the following coefficients:"
 for coef in coefs:
-    print coef
+    print "Index:", coef[0], "weight:", coef[1]
 
 # save just the coefficient values
 firstCoefs = [coef[0] for coef in coefs]
