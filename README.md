@@ -1,7 +1,6 @@
 # Genomic Eye Color Classification with Machine Learning
 ### Kevin Fang, Curoverse 2017
-[![DOI-project](https://www.zenodo.org/badge/DOI/10.5281/zenodo.843563.svg)](https://doi.org/10.5281/zenodo.843563) [![DOI-poster](https://zenodo.org/badge/DOI/10.5281/zenodo.843566.svg)](https://doi.org/10.5281/zenodo.843566)
-
+[![DOI-project](https://www.zenodo.org/badge/DOI/10.5281/zenodo.843563.svg)](https://doi.org/10.5281/zenodo.843563) [![DOI-poster-paper](https://zenodo.org/badge/DOI/10.5281/zenodo.1035491.svg)](https://doi.org/10.5281/zenodo.1035491)
 
 Using machine learning and the Arvados Lightning project, we were able to predict eye color to 95% accuracy.
 
