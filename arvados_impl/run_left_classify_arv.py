@@ -163,13 +163,23 @@ def getTileLocation(raw_tile_data):
     proc = subprocess.check_output(cmdToRun, shell=True)
     return proc
 
+# get the location of a tile
+def getTileLocation(arg, raw_tile_data):
+    split_raw = raw_tile_data.split('\t')
+    begin = int(split_raw[2])
+    sequence = int(split_raw[1])
+    vecStep = str(vectorizedStep[int(arg)])
+    vecStep = vecStep[2:].zfill(4)
+    cmdToRun = "bgzip -c -b %d -s %d -d %s | grep -B1 \"%s\s\"" % (begin, sequence, assemblyGz, vecStep)
+    return subprocess.check_output(cmdToRun, shell=True)
+
 # search for the specific tile location from the coefficients
 tileLocations = []
 for item in indices:
     tile = tileSearch(item)
-    tileLocations.append(tile)
+    tileLocations.append((item, tile))
 
-print "Highest coefficient tile:\n" + tileLocations[0]
+print "Highest coefficient tile:\n" + tileLocations[0][1]
 print "Corresponding Tile location:"
 # get the location of the tile with the highest coefficient
-print getTileLocation(tileLocations[0])
+print getTileLocation(tileLocations[0][0])
